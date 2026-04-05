@@ -1,0 +1,48 @@
+{
+  "name": "station-ziz",
+  "version": "1.1.0",
+  "description": "Système de gestion intelligent pour Station ZIZ (Installation Azilal)",
+  "author": "Yahya Ben Addi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yahyabenaddi/station-ziz.git"
+  },
+  "main": "main.js",
+  "scripts": {
+    "start": "node server.js",
+    "web": "node server.js",
+    "dist": "electron-builder --win --ia32"
+  },
+  "build": {
+    "appId": "com.ziz.station",
+    "productName": "Station ZIZ",
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Station ZIZ"
+    },
+    "files": [
+      "**/*",
+      "!release/**/*",
+      "!dist/**/*"
+    ]
+  },
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "electron": "21.4.4",
+    "electron-builder": "^26.8.1"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.18.2",
+    "nodemailer": "^8.0.2",
+    "pg": "^8.20.0",
+    "sqlite3": "^5.1.7"
+  }
+}

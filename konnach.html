@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Konnach - Station ZIZ</title>
+
+    <!-- PWA Meta -->
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#1a365d" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Station ZIZ" />
+    <link rel="apple-touch-icon" href="icon-192.png" />
+
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Cairo:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --took-bg: rgba(16, 185, 129, 0.1);
+            --took-text: #10b981;
+            --gave-bg: rgba(239, 68, 68, 0.1);
+            --gave-text: #ef4444;
+            --bg-soft: #f8fafc;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            font-family: 'Cairo', 'Inter', sans-serif;
+            background-color: var(--bg-soft);
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+        }
+
+        .phone-container {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            position: relative;
+        }
+
+        header {
+            padding: 15px 20px;
+            background: #fff;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--primary);
+            cursor: pointer;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .top-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 20px;
+            background: #fff;
+        }
+
+        .summary-card {
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #f1f5f9;
+        }
+
+        .card-took {
+            background-color: var(--took-bg);
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+
+        .card-gave {
+            background-color: var(--gave-bg);
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        .summary-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            font-size: 1.2rem;
+            font-weight: 800;
+        }
+
+        .value-took {
+            color: var(--took-text);
+        }
+
+        .value-gave {
+            color: var(--gave-text);
+        }
+
+        .search-area {
+            padding: 10px 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            background: #f1f5f9;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 35px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+        }
+
+        .client-list {
+            flex: 1;
+            padding-bottom: 80px;
+        }
+
+        .client-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .client-item:active {
+            background: #f8fafc;
+        }
+
+        .client-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: var(--took-bg);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            margin-left: 15px;
+        }
+
+        .client-info {
+            flex: 1;
+        }
+
+        .client-name {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .client-sub {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .client-balance {
+            text-align: left;
+        }
+
+        .balance-val {
+            font-weight: 800;
+            font-size: 1rem;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            cursor: pointer;
+            border: none;
+            z-index: 1000;
+        }
+
+        /* Detail View Styles */
+        #detailView {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 200;
+            background: #fff;
+            flex-direction: column;
+        }
+
+        .detail-header {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .ledger {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 20px;
+            background: #fff;
+        }
+
+        .ledger-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f8fafc;
+        }
+
+        .ledger-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ledger-date {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .ledger-note {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .ledger-amount {
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .footer-actions {
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            background: #fff;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .btn-action {
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-took {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .btn-gave {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 25px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            pointer-events: auto !important;
+            cursor: text !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        .btn-del-trans {
+            background: #ef4444 !important;
+            color: #fff !important;
+            border: none !important;
+            width: 32px !important;
+            height: 32px !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 0.8rem !important;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3) !important;
+            transition: transform 0.1s !important;
+        }
+
+        .btn-del-trans:active {
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="phone-container">
+        <!-- List View -->
+        <div id="listView">
+            <header>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="back-btn" onclick="window.location.href='index.html'"
+                        style="display:flex; align-items:center; gap:5px; font-size:0.9rem; font-weight:700;">
+                        <i class="fas fa-arrow-right"></i> عودة
+                    </button>
+                    <button class="btn-del-trans" onclick="clearKonnach()"
+                        style="width: auto !important; height: auto !important; padding: 5px 10px !important; font-size: 0.7rem !important; border-radius: 6px !important;"
+                        title="مسح الكل">
+                        <i class="fas fa-trash-sweep"></i> مسح الكل
+                    </button>
+                </div>
+                <div class="header-title">Konach - كـونـاش</div>
+                <div><i class="fas fa-book-open" style="color: var(--primary);"></i></div>
+            </header>
+
+            <div class="top-summary">
+                <div class="summary-card card-took">
+                    <p class="summary-label">لي خديت (المجموع)</p>
+                    <p class="summary-value value-took" id="summaryTotalTook">0.0 درهم</p>
+                </div>
+                <div class="summary-card card-gave">
+                    <p class="summary-label">لي عطيت (المجموع)</p>
+                    <p class="summary-value value-gave" id="summaryTotalGave">0.0 درهم</p>
+                </div>
+            </div>
+
+            <div class="search-area">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="البحث عن زبون..." id="clientSearch"
+                    oninput="filterClients()">
+            </div>
+
+            <div class="client-list" id="clientList">
+                <!-- Dynamic Clients -->
+                <div style="text-align: center; padding: 40px; color: #94a3b8;">
+                    <i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.2;"></i>
+                    <p>لا يوجد زبناء بعد</p>
+                </div>
+            </div>
+
+            <button class="fab" onclick="showAddClientModal()">
+                <i class="fas fa-user-plus"></i>
+                أضف زبون جديد
+            </button>
+        </div>
+
+        <!-- Detail View -->
+        <div id="detailView">
+            <div class="detail-header">
+                <button class="back-btn" onclick="hideDetail()"><i class="fas fa-chevron-right"></i> عودة</button>
+                <div id="activeClientName" style="font-weight: 800; font-size: 1.1rem; color: var(--primary);"></div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="back-btn" onclick="callClient()" title="اتصال"><i class="fas fa-phone"></i></button>
+                    <button class="back-btn" onclick="deleteClient()" style="color: #ef4444;" title="حذف الزبون"><i
+                            class="fas fa-user-slash"></i></button>
+                </div>
+            </div>
+
+            <div style="text-align: center; padding: 20px; background: #fff; border-bottom: 1px solid #f1f5f9;">
+                <p style="font-size: 0.8rem; color: #64748b; margin-bottom: 8px;">مجموع الحساب</p>
+                <p id="activeClientBalance" style="font-size: 1.8rem; font-weight: 800; color: var(--primary);">0.0 درهم
+                </p>
+            </div>
+
+            <div class="ledger" id="ledgerContent">
+                <!-- Transactions -->
+            </div>
+
+            <div class="footer-actions">
+                <button class="btn-action btn-gave" onclick="showTransactionModal('gave')">(دفع لي)خديت</button>
+                <button class="btn-action btn-took" onclick="showTransactionModal('took')">أعطيت(كريدي)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div class="modal" id="clientModal">
+        <div class="modal-content">
+            <h3 style="margin-top: 0;">زبون جديد</h3>
+            <div class="form-group">
+                <label for="newName">الاسم الكامل</label>
+                <input type="text" id="newName" placeholder="مثلا: زكرياء">
+            </div>
+            <div class="form-group">
+                <label for="newPhone">رقم الهاتف</label>
+                <input type="text" id="newPhone" placeholder="06XXXXXXXX">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-action" style="background: #f1f5f9; flex:1" onclick="closeModals()">إلغاء</button>
+                <button class="btn-action" style="background: var(--primary); color: #fff; flex:1"
+                    onclick="saveClient()">حفظ SAVE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div class="modal" id="transactionModal">
+        <div class="modal-content">
+            <h3 id="transModalTitle" style="margin-top: 0;">إضافة معاملة</h3>
+            <div class="form-group">
+                <label for="transAmount">المبلغ (درهم)</label>
+                <input type="number" id="transAmount" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="transNote">ملاحظة</label>
+                <input type="text" id="transNote" placeholder="شنو خديت / شحال خلصت">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-action" style="background: #f1f5f9; flex:1" onclick="closeModals()">إلغاء</button>
+                <button class="btn-action" id="btnSaveTrans" style="flex:1" onclick="saveTransaction()">حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="security.js"></script>
+    <script src="konnach.js"></script>
+    <script>
+        // Nuclear Focus Enforcer
+        document.addEventListener('mousedown', (e) => {
+            const el = e.target;
+            if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                setTimeout(() => {
+                    el.focus();
+                    // Force cursor to end
+                    if (el.type !== 'number' && el.setSelectionRange) {
+                        const len = el.value.length;
+                        el.setSelectionRange(len, len);
+                    }
+                }, 10);
+            }
+        }, true);
+    </script>
+</body>
+
+</html>
